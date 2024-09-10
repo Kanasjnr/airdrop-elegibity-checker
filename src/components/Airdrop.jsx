@@ -1,5 +1,4 @@
 import { Box, Button, Container, Input, Text, VStack } from "@chakra-ui/react";
-
 import React, { useState } from "react";
 import CryptoJS from "crypto-js";
 import { EligableAddress } from "../db/Database";
@@ -11,8 +10,12 @@ const Airdrop = () => {
   const [isEligible, setIsEligible] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleCheckEligibility = () => {
+  const handleCheckEligibility = async () => {
     setIsLoading(true);
+
+    // Simulate network request delay
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
     const leaf = hash(address);
     const isValid = EligableAddress.map(hash).includes(leaf);
 
@@ -21,35 +24,18 @@ const Airdrop = () => {
   };
 
   return (
-    <Container
-      minH="100vh"
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-     
-    >
-      <Box
-        p={8}
-        maxW="md"
-        borderWidth="1px"
-        borderRadius="lg"
-        boxShadow="xl"
-     
-        textAlign="center"
-      >
+    <Container minH="100vh" display="flex" alignItems="center" justifyContent="center">
+      <Box p={8} maxW="md" borderWidth="1px" borderRadius="lg" boxShadow="xl" textAlign="center">
         <VStack spacing={6}>
-          <Text fontSize="3xl" fontWeight="bold" >
+          <Text fontSize="3xl" fontWeight="bold">
             Airdrop Eligibility Checker
           </Text>
-          
-            <Input
-              placeholder="Enter Ethereum Address"
-              size="lg"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-            
-            />
-         
+          <Input
+            placeholder="Enter Ethereum Address"
+            size="lg"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+          />
           <Button
             colorScheme="teal"
             size="lg"
@@ -57,7 +43,6 @@ const Airdrop = () => {
             onClick={handleCheckEligibility}
             isLoading={isLoading}
             loadingText="Checking..."
-           
           >
             Check Eligibility
           </Button>
@@ -71,12 +56,9 @@ const Airdrop = () => {
               opacity={isEligible !== null ? 1 : 0}
               transform={isEligible !== null ? "scale(1)" : "scale(0.8)"}
             >
-              {isEligible
-                ? "Eligible for Airdrop! "
-                : "Not Eligible for Airdrop "}
+              {isEligible ? "Eligible for Airdrop!" : "Not Eligible for Airdrop"}
             </Text>
           )}
-         
         </VStack>
       </Box>
     </Container>
